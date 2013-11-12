@@ -14,9 +14,8 @@ package {
 		public function Main() { 		
 			super();
 			CMLParser.addEventListener(CMLParser.COMPLETE, cmlInit);			
-			fullscreen = true;
-			gml = "library/gml/gestures.gml";
-			cml = "library/cml/main.cml";
+			gml = "gestures.gml";
+			cml = "main.cml";
 		}
 	
 		override protected function gestureworksInit():void {

@@ -1,34 +1,27 @@
-﻿package 
-{
-	import com.gestureworks.cml.core.*;
-	import com.gestureworks.cml.element.*;
-	import com.gestureworks.cml.events.*;
-	import com.gestureworks.cml.managers.*;
-	import com.gestureworks.cml.utils.*;
-	import com.gestureworks.core.*;
-	import com.gestureworks.events.*;
-	import flash.events.*;
+﻿package {
 	
-	[SWF(width = "1280", height = "720", backgroundColor = "0x000000", frameRate = "60")]
+	import com.gestureworks.cml.core.CMLParser;
+	import com.gestureworks.core.GestureWorks;
+	import flash.events.Event;
 	
-	public class Main extends GestureWorks
-	{		
-		public function Main() 
-		{		
+	[SWF(width = "1920", height = "1080", backgroundColor = "0x000000", frameRate = "60")]
+	
+	public class Main extends GestureWorks {		
+		
+		public function Main() { 		
 			super();
-			gml = "library/gml/my_gestures.gml"			
-			cml = "library/cml/my_application.cml";
 			CMLParser.addEventListener(CMLParser.COMPLETE, cmlInit);			
+			gml = "gestures.gml";
+			cml = "main.cml";
 		}
 	
-		override protected function gestureworksInit():void
- 		{
+		override protected function gestureworksInit():void {
 			trace("gestureWorksInit()");
 		}
 		
-		private function cmlInit(event:Event):void
-		{
+		private function cmlInit(e:Event):void {
 			trace("cmlInit()");
-		}		
+		}
+		
 	}
 }

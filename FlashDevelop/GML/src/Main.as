@@ -1,9 +1,8 @@
 package {
 	
 	import com.gestureworks.core.GestureWorks;
-	import com.gestureworks.cml.core.CMLParser;
 	
-	[SWF(width = "1280", height = "720", backgroundColor = "0x000000", frameRate = "60")]
+	[SWF(width = "1920", height = "1080", backgroundColor = "0x000000", frameRate = "60")]
 	
 	public class Main extends GestureWorks {		
 		

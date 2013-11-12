@@ -1,11 +1,12 @@
-package {
-	import com.gestureworks.cml.core.CMLAir;	
+﻿package {
+	import com.gestureworks.away3d.TouchManager3D;
+	import com.gestureworks.cml.core.CMLAway3D;	
 	import com.gestureworks.cml.core.CMLParser;
 	import com.gestureworks.core.GestureWorks;
 	import flash.events.Event;
 	
-	// load AIR classes
-	CMLAir;	
+	// load Away3D classes
+	CMLAway3D;	
 	
 	[SWF(width = "1920", height = "1080", backgroundColor = "0x000000", frameRate = "60")]
 	
@@ -13,10 +14,10 @@ package {
 		
 		public function Main() { 		
 			super();
+			TouchManager3D.initialize(); // TouchManager3D must be initialized			
 			CMLParser.addEventListener(CMLParser.COMPLETE, cmlInit);			
-			fullscreen = true;
-			gml = "library/gml/gestures.gml";
-			cml = "library/cml/main.cml";
+			gml = "gestures.gml";
+			cml = "main.cml";
 		}
 	
 		override protected function gestureworksInit():void {
