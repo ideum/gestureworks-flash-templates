@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<cml css="css/styles.css" rootDirectory="library/">	
+	
+	<!-- Use Include tag to parse desired CML files-->
+	
+	<Include src="cml/display/sample.cml" /> 
+	<Include src="cml/data/sample.cml" /> 
+	
+</cml>
