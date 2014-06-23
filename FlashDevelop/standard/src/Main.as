@@ -29,6 +29,13 @@ package {
 		
 		private function cmlInit(e:Event):void {			
 			CMLParser.removeEventListener(CMLParser.COMPLETE, cmlInit);
+			
+			//add stats display for performance evalutation
+			if (CONFIG::debug == true) {
+				addChild(new Stats());
+			}
+			
+			//post CML parse calls
 		}
 	}
 	
