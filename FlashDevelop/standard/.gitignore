@@ -8,3 +8,6 @@ bin/*.swf
 # Other files and folders
 .settings/
 obj/
+
+#ignore content
+bin/library/assets
