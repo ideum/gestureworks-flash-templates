@@ -27,6 +27,10 @@ package {
 			//CMLCore.classes = CMLCore.classes.concat([Class1, Class2, Class3]);	
 		}
 		
+		/**
+		 * CML parsing complete event handler
+		 * @param	e
+		 */
 		private function cmlInit(e:Event):void {			
 			CMLParser.removeEventListener(CMLParser.COMPLETE, cmlInit);
 			
@@ -36,6 +40,13 @@ package {
 			}
 			
 			//post CML parse calls
+		}
+		
+		/**
+		 * GML parsing complete call
+		 */
+		override protected function gestureworksInit():void {
+			super.gestureworksInit();
 		}
 	}
 	
