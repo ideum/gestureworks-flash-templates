@@ -1,73 +1,105 @@
+;UPDATE NAME ATTRIBUTE TO MATCH THE NAME OF THE FD PROJECT
+!define NAME "Project Name" 
 
-; The name of the project
-Name "Project" ; Write the name of your project here between ""
+;--------------SETUP-------------------
+;Include Modern UI
+!include "MUI2.nsh"
 
-;Name of the installer
-OutFile "Project.exe" ; Write the name of your installer executable here 
+; Installer attributes
+AllowRootDirInstall true ; required to 'install' to root dir
+ShowInstDetails show ; automatically show install details
+
+; The name of the installer
+Name "${NAME}"
+
+; The file to write
+OutFile "${NAME}_Installer.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES32\Ideum
 
-; The text to prompt the user to enter a directory
-DirText "This will install the Project application. Choose a root directory:" ; Write your project name again here
+; Registry key to check for directory (so if you install again, it will overwrite the old one automatically)
+InstallDirRegKey HKLM "Software\${NAME}" "Install_Dir"
 
+; Request application privileges for Windows Vista+
 RequestExecutionLevel admin
+
+;--------------MACROS------------------
+
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_COMPONENTS
+
+!insertmacro MUI_PAGE_INSTFILES
+
+!define MUI_FINISHPAGE_RUN
+!define MUI_FINISHPAGE_RUN_TEXT "Start ${NAME}"
+!define MUI_FINISHPAGE_RUN_FUNCTION "StartApp"
+!insertmacro MUI_PAGE_FINISH
+
+!insertmacro MUI_UNPAGE_WELCOME
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+!insertmacro MUI_UNPAGE_FINISH
+
+; Language
+!insertmacro MUI_LANGUAGE "English"
 
 ;--------------------------------
 
 ; The stuff to install
-Section "" ;No components page, name is not important
+Section "Install ${NAME}"
 
-!define NAME "Project" ;Write project name here
+  ; Set output path to the installation directory.
+  SetOutPath "$INSTDIR\${NAME}"
 
-!define EXECUTABLE "Project.exe" ;Write name of your .exe file that you converted from .swf and are including in the installer.
-
-!define FILENAME "Project" ; Write root file name with no spaces ex: (NationalParkService)
-
-SetShellVarContext all
-
-SetOutPath "$INSTDIR\${FILENAME}"
-
-;These are all the files in your bin directory that are required to run the project
-File /r "bin\*"
+  ; Put files there
+  File /r "bin\*"
 
   ; Write the installation path into the registry
-  WriteRegStr HKLM SOFTWARE\${FILENAME} "Install_Dir" "$INSTDIR"
-  
+  WriteRegStr HKLM SOFTWARE\${NAME} "Install_Dir" "$INSTDIR"
+
   ; Write the uninstall keys for Windows
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${FILENAME}" "DisplayName" "${NAME}"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${FILENAME}" "UninstallString" '"$INSTDIR\${FILENAME}\uninstall.exe"'
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${FILENAME}" "NoModify" 1
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${FILENAME}" "NoRepair" 1
-  WriteUninstaller "$INSTDIR\${FILENAME}\uninstall.exe"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${NAME}" "DisplayName" "${NAME}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${NAME}" "UninstallString" "$INSTDIR\${NAME}\${NAME}_Uninstaller.exe"
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${NAME}" "NoModify" 1
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${NAME}" "NoRepair" 1
+  WriteUninstaller "$INSTDIR\${NAME}\${NAME}_Uninstaller.exe"
 
-CreateDirectory "$SMPROGRAMS\Ideum"
-CreateShortCut "$SMPROGRAMS\Ideum\${NAME}.lnk" "$INSTDIR\${FILENAME}\${EXECUTABLE}"
-CreateShortCut "$DESKTOP\${NAME}.lnk" "$INSTDIR\${FILENAME}\${EXECUTABLE}"
-CreateShortCut "$APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\${NAME}.lnk" "$INSTDIR\${FILENAME}\${EXECUTABLE}"
+SectionEnd
 
-;UNCOMMMENT IF YOU WANT THE README TO OPEN AFTER INSTALLATION
-;ExecShell "open" "$INSTDIR\${FILENAME}\readme.txt"
+; Optional section (can be disabled by the user)
+SectionGroup "Desktop Shortcuts"
+	Section "!Core"
+		CreateShortcut "$DESKTOP\${NAME}.lnk" "$INSTDIR\${NAME}\${NAME}.exe"
+	SectionEnd
+SectionGroupEnd
 
-SectionEnd ; end the section
+; Optional section (can be disabled by the user)
+SectionGroup "Start Menu Shortcuts"
+	Section "!Core"
+		CreateShortCut "$APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\${NAME}.lnk" "$INSTDIR\${NAME}\${NAME}.exe"
+	SectionEnd	
+SectionGroupEnd
 
 ;--------------------------------
 
 ; Uninstaller
 
 Section "Uninstall"
-  SetShellVarContext all
 
-  ; Remove shortcuts, if any
-  Delete "$SMPROGRAMS\Ideum\${NAME}.lnk"  
-  Delete "$DESKTOP\${NAME}.lnk"
-  Delete "$APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\${NAME}.lnk"
-
-  ; Remove directory
-  RMDir /r "$INSTDIR"
-    
   ; Remove registry keys
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${FILENAME}"
-  DeleteRegKey HKLM SOFTWARE\${FILENAME}
-  
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${NAME}"
+  DeleteRegKey HKLM SOFTWARE\${NAME}
+
+  ; Remove shortcuts and uninstaller
+  Delete "$DESKTOP\${NAME}.lnk"
+  Delete "$APPDATA\Microsoft\Windows\Start Menu\Programs\Startup\${NAME}.lnk"    
+
+  ; Remove installation directory
+  RMDir /r "$INSTDIR"
+
 SectionEnd
+
+Function StartApp
+  ExecShell "" "$INSTDIR\${NAME}\${NAME}.exe"
+FunctionEnd
